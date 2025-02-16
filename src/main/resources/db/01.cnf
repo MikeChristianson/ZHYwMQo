@@ -1,2 +1,2 @@
 [mysqld]
-local_infile=1
+secure-file-priv=""
