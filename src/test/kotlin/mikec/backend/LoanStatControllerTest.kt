@@ -31,12 +31,25 @@ class LoanStatControllerTest @Autowired constructor(
     @Test
     fun `hit loan_amnt endpoint`() {
         mockMvc.perform(
-            get("/loan-stats/loan_amnt")
+            get("/loan-stats/loan_amntz")
 //                .header(HttpHeaders.ACCEPT, MediaType.ALL)
         )
             .andExpectAll(
                 status().isOk,
                 content().string("[1000, 40000]")
+            )
+
+    }
+
+    @Test
+    fun `hit variable type endpoint`() {
+        mockMvc.perform(
+            get("/loan-stats/loan_amnt")
+//                .header(HttpHeaders.ACCEPT, MediaType.ALL)
+        )
+            .andExpectAll(
+                status().isOk,
+                content().string("[5.32, 30.99]")
             )
 
     }

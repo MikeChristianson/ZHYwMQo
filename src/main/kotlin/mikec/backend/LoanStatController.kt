@@ -14,22 +14,18 @@ class LoanStatController @Autowired constructor(
 ) {
     @GetMapping("/")
     fun summary(): Any {
-        val summary = repository.summarize()
-        val message = (summary as Array<*>).contentToString()
-        return message
+        return repository.summarize()
     }
 
-    @GetMapping("/loan_amnt")
-    fun statsLoanAmnt(): Any {
-        val summary = repository.summarizeLoanAmnt()
-        val message = (summary as Array<*>).contentToString()
-        return message
-    }
+//    @GetMapping("/loan_amntz")
+//    fun statsLoanAmnt(): Any {
+//        val summary = repository.summarizeLoanAmnt()
+//        val message = (summary as Array<*>).contentToString()
+//        return message
+//    }
 
     @GetMapping("/{type}")
     fun summaryForType(@PathVariable type: String): Any {
-        val summary = repository.summarize(type)
-        val message = (summary as Array<*>).contentToString()
-        return message
+        return repository.summarize(type)
     }
 }
