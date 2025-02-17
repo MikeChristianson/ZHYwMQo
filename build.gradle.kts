@@ -23,16 +23,16 @@ repositories {
 dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-batch")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
-//	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-//	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.liquibase:liquibase-core")
-//	implementation("com.github.tototoshi:scala-csv_3:2.0.0")
+//	implementation("org.liquibase:liquibase-core")
 	implementation("org.jetbrains.kotlinx:dataframe:0.15.0")
 	implementation("org.jetbrains.kotlinx:dataframe-csv:0.15.0")
+	implementation("com.opencsv:opencsv:5.10")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
@@ -40,6 +40,7 @@ dependencies {
 //	testImplementation("org.springframework.batch:spring-batch-test")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	runtimeOnly("com.mysql:mysql-connector-j")
 }
 
 kotlin {
