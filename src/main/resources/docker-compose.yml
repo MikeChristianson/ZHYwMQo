@@ -1,6 +1,8 @@
+name: backend
 services:
 
   db:
+    container_name: db
     image: mysql:8
     restart: no
     ports:

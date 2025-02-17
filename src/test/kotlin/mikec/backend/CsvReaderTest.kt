@@ -15,7 +15,7 @@ class CsvReaderTest {
 
     @BeforeEach
     fun setUp() {
-        loanFile = File("./src/main/resources/static/LoanStats_securev1_2017Q4.csv")
+        loanFile = File("./src/main/resources/db/LoanStats_securev1_2017Q4.csv")
     }
 
     @Test
