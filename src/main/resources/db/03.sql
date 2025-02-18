@@ -3,7 +3,7 @@ load data infile '/docker-entrypoint-initdb.d/LoanStats_securev1_2017Q4.csv' int
     enclosed by '"'
     escaped by '"'
     lines terminated by '\n'
-    ignore 1 lines (
+    ignore 2 lines (
                     id,
                     @member_id,
                     loan_amnt,

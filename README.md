@@ -18,8 +18,9 @@ Requirements to run this application:
 
 Run this application:
 1. Build. `./gradlew build -x test`
-2. Start db. `docker compose -f src/main/resources/docker-compose.yml up -d`
-3. Run. `./gradlew bootRun` or `java -jar build/libs/backend-0.0.1-SNAPSHOT.jar`
+2. Download, decompress [`.csv file`](https://drive.google.com/file/d/1RdRVZdy_UYknm0Qr9clXAlQIi0Pts9VI/view?usp=share_link), remove the last four lines, and copy to `src/main/resources/db/LoanStats_securev1_2017Q4.csv`. 
+3. Start db. `docker compose -f src/main/resources/docker-compose.yml up -d`
+4. Run. `./gradlew bootRun` or `java -jar build/libs/backend-0.0.1-SNAPSHOT.jar`
 
 Run tests: `./gradlew test`
 
