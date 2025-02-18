@@ -2,10 +2,7 @@ package mikec.backend
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/loan-stats", produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -17,12 +14,10 @@ class LoanStatController @Autowired constructor(
         return repository.summarize()
     }
 
-//    @GetMapping("/loan_amntz")
-//    fun statsLoanAmnt(): Any {
-//        val summary = repository.summarizeLoanAmnt()
-//        val message = (summary as Array<*>).contentToString()
-//        return message
-//    }
+    @GetMapping("/types")
+    fun summaryForTypes(@RequestParam(required = true) types: List<String>): Map<String?, List<Map.Entry<String, Any>>>? {
+        return repository.summarize(types)
+    }
 
     @GetMapping("/{type}")
     fun summaryForType(@PathVariable type: String): Any {

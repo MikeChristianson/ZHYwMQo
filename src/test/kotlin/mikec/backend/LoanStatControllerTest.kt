@@ -19,24 +19,22 @@ class LoanStatControllerTest @Autowired constructor(
     fun `hit summary endpoint`() {
         mockMvc.perform(
             get("/loan-stats/")
-//                .header(HttpHeaders.ACCEPT, MediaType.ALL)
         )
             .andExpectAll(
                 status().isOk,
-                content().string("[1000, 40000, 5.32, 30.99]")
+                content().string("""[{"min(loan_amnt)":1000,"max(loan_amnt)":40000,"min(int_rate)":5.32,"max(int_rate)":30.99}]""")
             )
 
     }
 
     @Test
-    fun `hit loan_amnt endpoint`() {
+    fun `hit multiple endpoint`() {
         mockMvc.perform(
-            get("/loan-stats/loan_amntz")
-//                .header(HttpHeaders.ACCEPT, MediaType.ALL)
+            get("/loan-stats/types?types=loan_amnt,int_rate")
         )
             .andExpectAll(
                 status().isOk,
-                content().string("[1000, 40000]")
+                content().string("""{"loan_amnt":[{"min(loan_amnt)":1000},{"max(loan_amnt)":40000}],"int_rate":[{"min(int_rate)":5.32},{"max(int_rate)":30.99}]}""")
             )
 
     }
@@ -45,11 +43,22 @@ class LoanStatControllerTest @Autowired constructor(
     fun `hit variable type endpoint`() {
         mockMvc.perform(
             get("/loan-stats/loan_amnt")
-//                .header(HttpHeaders.ACCEPT, MediaType.ALL)
         )
             .andExpectAll(
                 status().isOk,
-                content().string("[5.32, 30.99]")
+                content().string("""[{"min(loan_amnt)":1000,"max(loan_amnt)":40000}]""")
+            )
+
+    }
+
+    @Test
+    fun `hit variable type endpoint int`() {
+        mockMvc.perform(
+            get("/loan-stats/int_rate")
+        )
+            .andExpectAll(
+                status().isOk,
+                content().string("""[{"min(int_rate)":5.32,"max(int_rate)":30.99}]""")
             )
 
     }

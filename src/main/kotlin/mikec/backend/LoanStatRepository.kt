@@ -1,49 +1,71 @@
 package mikec.backend
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.query.Param
-import org.springframework.jdbc.core.PreparedStatementCreator
-import org.springframework.jdbc.core.RowCallbackHandler
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
 class LoanStatRepository @Autowired constructor(
-    private val jdbcTemplate: NamedParameterJdbcTemplate,
+    private val jdbcTemplate: JdbcTemplate,
 ) {
 
-    fun summarize() {
-        return jdbcTemplate.jdbcOperations.query(PreparedStatementCreator {
-            val preparedStatement = it.prepareStatement(
+    fun summarize(): List<Map<String, Any>> {
+        val a = "loan_amnt"
+        val b = "int_rate"
+        return jdbcTemplate.query({
+            it.prepareStatement(
                 """
-        select min(?), max(?), min(?), max(?)
-        from loan_stats
-    """
+               select min($a), max($a), min($b), max($b)
+               from loan_stats
+           """
             )
-            preparedStatement.setString(1, "loan_amnt")
-            preparedStatement.setString(2, "loan_amnt")
-            preparedStatement.setString(3, "int_rate")
-            preparedStatement.setString(4, "int_rate")
-            preparedStatement
-        }, object : RowCallbackHandler {
-            override fun processRow(rs: ResultSet) {
-                rs.findColumn("fred")
-            }
-        })
+        }, resultSetToMap)
     }
 
-//    @Query("""
-//        select min(loan_amnt), max(loan_amnt)
-//        from loan_stats
-//    """)
-//    fun summarizeLoanAmnt(): Any
+    fun summarize(types: List<String>): Map<String?, List<Map.Entry<String, Any>>>? {
+        val select = types.map { type ->
+            "min($type), max($type)"
+        }
+        val results = jdbcTemplate.query({
+            it.prepareStatement(
+                """
+               select ${select.joinToString()}
+               from loan_stats
+           """
+            )
+        }, resultSetToMap).firstOrNull()
 
-        fun summarize(@Param("type") type: String): Map<String, Any> {
-            val query = """
-        select min(:type), max(:type)
-        from loan_stats
-    """
-            return jdbcTemplate.queryForMap(query, mapOf("type" to type)).toMap()
+        return results
+            ?.entries
+            ?.groupBy(typeKeySelector)
+            ?.filterKeys { it in types }
+    }
+
+    fun summarize(type: String): List<Map<String, Any>> {
+        return jdbcTemplate.query({
+            it.prepareStatement(
+                """
+               select min($type), max($type)
+               from loan_stats
+           """
+            )
+        }, resultSetToMap)
+    }
+
+    val resultSetToMap: (rs: ResultSet, rowNum: Int) -> Map<String, Any> = { rs, _ ->
+        buildMap {
+            val metaData = rs.metaData
+            for (i in 1..metaData.columnCount) {
+                val key = metaData.getColumnName(i)
+                val value = rs.getObject(i)
+                set(key, value)
+            }
         }
     }
+
+    val typeKeySelector: (Map.Entry<String, Any>) -> String? = { (key, _) ->
+        Regex(""".+\((.+)\)""").matchEntire(key)?.groups?.get(1)?.value
+    }
+
+}
