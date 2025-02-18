@@ -10,17 +10,14 @@ class LoanStatController @Autowired constructor(
     private val repository: LoanStatRepository,
 ) {
     @GetMapping("/")
-    fun summary(): Map<String?, List<Map.Entry<String, Any>>>? {
-        return repository.summarize()
-    }
+    fun summary(): StatsByType? = repository.summarize()
 
     @GetMapping("/types")
-    fun summaryForTypes(@RequestParam(required = true) types: List<String>): Map<String?, List<Map.Entry<String, Any>>>? {
-        return repository.summarize(types)
-    }
+    fun summaryForTypes(@RequestParam types: List<String>): StatsByType? =
+        repository.summarize(types)
 
     @GetMapping("/{type}")
-    fun summaryForType(@PathVariable type: String): Any {
-        return repository.summarize(type)
-    }
+    fun summaryForType(@PathVariable type: String): Any = repository.summarize(type)
 }
+
+typealias StatsByType = Map<String?, List<Map.Entry<String, Any>>>

@@ -35,6 +35,7 @@ class LoanStatControllerTest @Autowired constructor(
             .andExpectAll(
                 status().isOk,
                 content().string("""{"loan_amnt":[{"min(loan_amnt)":1000},{"max(loan_amnt)":40000}],"int_rate":[{"min(int_rate)":5.32},{"max(int_rate)":30.99}]}""")
+                //expedient. normal verification would use jsonpath.
             )
 
     }

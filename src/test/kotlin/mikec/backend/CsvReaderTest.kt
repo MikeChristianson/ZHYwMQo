@@ -11,12 +11,7 @@ import kotlin.streams.asStream
 
 class CsvReaderTest {
 
-    private lateinit var loanFile: File
-
-    @BeforeEach
-    fun setUp() {
-        loanFile = File("./src/main/resources/db/LoanStats_securev1_2017Q4.csv")
-    }
+    private val loanFile = File("./src/main/resources/db/LoanStats_securev1_2017Q4.csv")
 
     @Test
     fun `verify can read all lines`() {
@@ -59,16 +54,20 @@ class CsvReaderTest {
 
             val columnNames = listOf("loan_amnt", "funded_amnt")
 
-            val loanAmntSequence = generateSequence {
+            val sequence = generateSequence {
 //                println("Peek: ${Arrays.toString(csvReader.peek())}")
                 csvReader.readNext(*columnNames.toTypedArray())
             }
 
-            val collect: MutableMap<Int, MutableList<Array<String>>> = loanAmntSequence
+            val collect: MutableMap<Int, MutableList<Array<String>>> = sequence
                 .filter { it.isNotEmpty() }
+                //it does not seem possible to use a single sequence to produce
+                //n number of other sequences to then perform aggregations on.
+
                 .asStream()
                 .collect(Collectors.groupingBy { it.size })
-            collect
+                //Collectors has things like summarizingDouble() but
+                //seems to only operate on a single element (column)
         }
     }
 }

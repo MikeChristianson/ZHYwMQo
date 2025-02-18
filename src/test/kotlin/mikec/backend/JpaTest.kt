@@ -8,7 +8,7 @@ import java.util.*
 @Suppress("UNCHECKED_CAST")
 @SpringBootTest
 class JpaTest @Autowired constructor(
-    val repository: LoanStatRepository
+    private val repository: LoanStatRepository
 ) {
     @Test
     fun name() {
