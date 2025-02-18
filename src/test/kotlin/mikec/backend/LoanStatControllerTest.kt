@@ -22,7 +22,7 @@ class LoanStatControllerTest @Autowired constructor(
         )
             .andExpectAll(
                 status().isOk,
-                content().string("""[{"min(loan_amnt)":1000,"max(loan_amnt)":40000,"min(int_rate)":5.32,"max(int_rate)":30.99}]""")
+                content().string("""{"loan_amnt":[{"min(loan_amnt)":1000},{"max(loan_amnt)":40000}],"term":[{"min(term)":36},{"max(term)":60}],"int_rate":[{"min(int_rate)":5.32},{"max(int_rate)":30.99}],"grade":[{"min(grade)":"A"},{"max(grade)":"G"}],"addr_state":[{"min(addr_state)":"AK"},{"max(addr_state)":"WY"}],"issue_d":[{"min(issue_d)":"2017-10-01"},{"max(issue_d)":"2017-12-01"}]}""")
             )
 
     }

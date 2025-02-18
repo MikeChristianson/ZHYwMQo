@@ -10,7 +10,7 @@ class LoanStatController @Autowired constructor(
     private val repository: LoanStatRepository,
 ) {
     @GetMapping("/")
-    fun summary(): Any {
+    fun summary(): Map<String?, List<Map.Entry<String, Any>>>? {
         return repository.summarize()
     }
 

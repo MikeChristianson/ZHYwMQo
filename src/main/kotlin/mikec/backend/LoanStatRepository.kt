@@ -9,24 +9,19 @@ import java.sql.ResultSet
 class LoanStatRepository @Autowired constructor(
     private val jdbcTemplate: JdbcTemplate,
 ) {
+    private val columns = jdbcTemplate.query("show columns from loan_stats where Field <> 'id'") { rs, _ ->
+        rs.getString("Field")
+    }.toList()
 
-    fun summarize(): List<Map<String, Any>> {
-        val a = "loan_amnt"
-        val b = "int_rate"
-        return jdbcTemplate.query({
-            it.prepareStatement(
-                """
-               select min($a), max($a), min($b), max($b)
-               from loan_stats
-           """
-            )
-        }, resultSetToMap)
+    fun summarize(): Map<String?, List<Map.Entry<String, Any>>>? {
+        return summarize(columns)
     }
 
     fun summarize(types: List<String>): Map<String?, List<Map.Entry<String, Any>>>? {
-        val select = types.map { type ->
-            "min($type), max($type)"
-        }
+        val select = types
+            .filter { it in columns }
+            .map { type -> "min($type), max($type)" }
+
         val results = jdbcTemplate.query({
             it.prepareStatement(
                 """
@@ -39,7 +34,6 @@ class LoanStatRepository @Autowired constructor(
         return results
             ?.entries
             ?.groupBy(typeKeySelector)
-            ?.filterKeys { it in types }
     }
 
     fun summarize(type: String): List<Map<String, Any>> {
@@ -65,7 +59,11 @@ class LoanStatRepository @Autowired constructor(
     }
 
     val typeKeySelector: (Map.Entry<String, Any>) -> String? = { (key, _) ->
-        Regex(""".+\((.+)\)""").matchEntire(key)?.groups?.get(1)?.value
+        Regex(""".+\((.+)\)""")
+            .matchEntire(key)
+            ?.groups
+            ?.get(1)
+            ?.value
     }
 
 }
